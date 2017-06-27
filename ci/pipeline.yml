@@ -3,16 +3,16 @@ resources:
 - name: attendee-service-source
   type: git
   source:
-    uri: https://github.com/pivotal-enablement/attendee-service
+    uri: https://github.com/vivekvl/pcf-attendee-service-code
     branch: smoke_tests
 - name: deploy-attendee-service
   type: cf
   source:
-    api: api.run.pez.pivotal.io
-    username: {{cf-user}}
-    password: {{cf-password}}
-    organization: pivot-twhitney
-    space: pal
+    api: api.system.dev.digifabricpcf.com
+    username: appuser2
+    password: password@123
+    organization: PAL
+    space: CICD
     skip_cert_check: true
 
 jobs:
@@ -44,6 +44,6 @@ jobs:
     trigger: true
     passed: [deploy]
   - task: smoke_test
-    file: attendee-service-source/ci/tasks/smoke_test.yml
+    file: attendee-service-source/ci/tasks/smoke-test.yml
     params:
-      ATTENDEE_SERVICE_URL: https://attendee-service-clotty-megalopolis.cfapps.pez.pivotal.io 
+      ATTENDEE_SERVICE_URL: http://attendee-service-orchitic-bast.app.dev.digifabricpcf.com 
