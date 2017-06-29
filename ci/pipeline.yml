@@ -1,3 +1,9 @@
+#Runs acceptance tests first.
+#Deploys the application to a temporary url if acceptance tests pass.
+#Runs smoke tests against the temporary url if deployment succeeds.
+#Binds the new version of the application to the existing public, or canonical, url if the smoke tests pass.
+#Runs the smoke tests again, this time against the canonical url.
+#If the smoke tests pass, brings down the previous version of the application.
 ---
 resources:
 - name: attendee-service-source
@@ -24,7 +30,7 @@ jobs:
   - task: test
     file: attendee-service-source/ci/tasks/test.yml
 
-- name: deploy
+- name: deploy_green
   public: true
   plan:
   - get: attendee-service-source
@@ -34,10 +40,10 @@ jobs:
     file: attendee-service-source/ci/tasks/package.yml
   - put: deploy-attendee-service
     params:
-      manifest: attendee-service-source/manifest.yml
+      manifest: attendee-service-source/manifest-green.yml
       path: package-output/attendee-service.jar
 
-- name: smoke_test
+- name: smoke_test_green
   public: true
   plan:
   - get: attendee-service-source
@@ -46,4 +52,30 @@ jobs:
   - task: smoke_test
     file: attendee-service-source/ci/tasks/smoke-test.yml
     params:
-      ATTENDEE_SERVICE_URL: http://attendee-service-orchitic-bast.app.dev.digifabricpcf.com 
+      ATTENDEE_SERVICE_URL: http://attendee-service-green.app.dev.digifabricpcf.com 
+
+- name: bind_green_canonical
+  public: true
+  plan:
+  - task: 
+    file: attendee-service-source/ci/tasks/update-routes.yml
+    params:  
+      PWS_API: api.system.dev.digifabricpcf.com
+      PWS_ORG: PAL
+      PWS_USER: appuser2
+      PWS_PWD: password@123
+      PWS_SPACE: CICD
+
+- name: smoke_test_green_canonical
+  public: true
+  plan:
+  - get: attendee-service-source
+    trigger: true
+    passed: [deploy]
+  - task: smoke_test
+    file: attendee-service-source/ci/tasks/smoke-test.yml
+    params:
+      ATTENDEE_SERVICE_URL: http://attendee-service-public.app.dev.digifabricpcf.com 
+
+
+

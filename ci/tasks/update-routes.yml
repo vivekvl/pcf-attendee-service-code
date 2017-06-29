@@ -1,0 +1,17 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: java
+    tag: "8"
+
+
+inputs:
+- name: attendee-service-source
+#- name: concourse-pipeline-samples
+#- name: current-app-info
+
+run:
+  path: attendee-service-source/ci/tasks/update-routes
