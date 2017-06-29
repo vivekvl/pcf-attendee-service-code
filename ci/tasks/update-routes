@@ -14,7 +14,7 @@ cf routes
 echo "Routing new deployment to public"
 
 set +e
-cf unmap-route attendee-service-public app.dev.digifabricpcf.com
+cf unmap-route attendee-service app.dev.digifabricpcf.com
 cf map-route attendee-service-green app.dev.digifabricpcf.com -n attendee-service-public
 #cf delete attendee-service -f -r #revisit
 cf rename attendee-service attendee-service-blue  #revisit
