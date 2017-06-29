@@ -97,7 +97,7 @@ public class AttendeeServiceApplicationTest {
         assertThat(phoneNumber, equalTo("555-7890"));
         assertThat(emailAddress, equalTo("bob@example.com"));
     }
-
+  
     private ResponseEntity<String> postJSON(String attendeeJSON, String url) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
