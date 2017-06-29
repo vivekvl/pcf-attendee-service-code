@@ -15,7 +15,6 @@ echo "Routing new deployment to public"
 
 set +e
 cf map-route attendee-service-green app.dev.digifabricpcf.com -n attendee-service-public
-cf delete attendee-service  #revisit
 cf rename attendee-service-green attendee-service  #revisit
 set -e
 
