@@ -48,7 +48,7 @@ jobs:
   plan:
   - get: attendee-service-source
     trigger: true
-    passed: [deploy]
+    passed: [deploy_green]
   - task: smoke_test
     file: attendee-service-source/ci/tasks/smoke-test.yml
     params:
@@ -57,7 +57,10 @@ jobs:
 - name: bind_green_canonical
   public: true
   plan:
-  - task: 
+  - get: attendee-service-source
+    trigger: true
+    passed: [smoke_test_green]   
+  - task: bing_green_canonical
     file: attendee-service-source/ci/tasks/update-routes.yml
     params:  
       PWS_API: api.system.dev.digifabricpcf.com
@@ -71,7 +74,7 @@ jobs:
   plan:
   - get: attendee-service-source
     trigger: true
-    passed: [deploy]
+    passed: [bind_green_canonical]
   - task: smoke_test
     file: attendee-service-source/ci/tasks/smoke-test.yml
     params:
